@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚙️ Skill Testing & Scenario Format</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:        #1a1a2e;
+  --navy-mid:    #16213e;
+  --navy-light:  #0f3460;
+  --accent:      #e94560;
+  --green-bg:    #0d3b2e;
+  --green-text:  #34d399;
+  --hdr-text:    #e0e0ff;
+  --card-bg:     #1e2140;
+  --card-border: #2a2d5e;
+  --bot-acc:     #4fa3e0;
+  --user-acc:    #a04fe0;
+  --muted:       #6b7280;
+  --text:        #d1d5db;
+  --white:       #f9fafb;
+  --amber:       #f59e0b;
+}
+body { background:var(--navy); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; }
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--card-border);border-radius:3px}
+
+/* ── HEADER ── */
+header { background:linear-gradient(135deg,#0f0f23,#1a1a2e 60%,#1a2040); border-bottom:1px solid var(--card-border); padding:13px 24px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; position:sticky; top:0; z-index:50; }
+.htitle { display:flex; align-items:center; gap:9px; }
+.htitle h1 { font-family:'Space Mono',monospace; font-size:.88rem; color:var(--hdr-text); }
+.credit { font-size:.68rem; color:var(--muted); font-family:'Space Mono',monospace; }
+.credit b { color:var(--green-text); }
+
+/* ── LAYOUT ── */
+.app { display:flex; flex:1; height:calc(100vh - 54px); overflow:hidden; }
+
+/* ── EDITOR ── */
+.editor { width:560px; min-width:340px; background:var(--navy-mid); border-right:1px solid var(--card-border); display:flex; flex-direction:column; overflow:hidden; }
+.pnl-hdr { padding:11px 16px 9px; border-bottom:1px solid var(--card-border); background:#12122a; display:flex; align-items:center; justify-content:space-between; }
+.pnl-hdr h2 { font-family:'Space Mono',monospace; font-size:.72rem; color:var(--hdr-text); text-transform:uppercase; letter-spacing:.05em; }
+.pnl-hdr .rc { font-size:.68rem; color:var(--muted); font-family:'Space Mono',monospace; }
+.toolbar { padding:9px 16px; display:flex; gap:7px; flex-wrap:wrap; border-bottom:1px solid var(--card-border); background:#0e0e22; }
+.btn { background:var(--card-bg); border:1px solid var(--card-border); color:var(--hdr-text); padding:5px 11px; border-radius:5px; font-family:'Space Mono',monospace; font-size:.67rem; cursor:pointer; transition:all .15s; white-space:nowrap; }
+.btn:hover { background:var(--navy-light); border-color:var(--bot-acc); }
+.btn.primary { background:var(--navy-light); border-color:var(--bot-acc); color:#fff; }
+.btn.primary:hover { background:#1a4a80; }
+.btn.danger { border-color:var(--accent); color:var(--accent); }
+.btn.danger:hover { background:#2a1020; }
+.btn.green { border-color:var(--green-text); color:var(--green-text); }
+.btn.green:hover { background:var(--green-bg); }
+.tbl-wrap { flex:1; overflow:auto; }
+table { width:100%; border-collapse:collapse; font-size:.72rem; min-width:660px; }
+thead tr { background:#1a1a2e; position:sticky; top:0; z-index:10; }
+thead th { padding:7px; text-align:left; font-family:'Space Mono',monospace; font-size:.6rem; text-transform:uppercase; letter-spacing:.06em; color:var(--hdr-text); border-bottom:2px solid var(--card-border); border-right:1px solid #232347; white-space:nowrap; }
+thead th.audio-col { background:var(--green-bg); color:var(--green-text); }
+tbody tr { border-bottom:1px solid #1c1c38; transition:background .1s; }
+tbody tr:hover { background:#1a1e3a; }
+tbody td { padding:4px 5px; border-right:1px solid #1c1c38; vertical-align:middle; }
+tbody td input, tbody td select, tbody td textarea { background:transparent; border:1px solid transparent; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.71rem; width:100%; padding:2px 3px; border-radius:3px; transition:border .1s,background .1s; outline:none; resize:none; }
+tbody td input:focus, tbody td select:focus, tbody td textarea:focus { border-color:var(--bot-acc); background:rgba(79,163,224,.07); }
+tbody td select option { background:var(--navy); }
+.td-order{width:36px;text-align:center}.td-type{width:70px}.td-spk{width:62px}.td-del{width:26px;text-align:center}
+.td-media{width:120px;min-width:110px}
+.del-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.82rem; padding:2px 3px; border-radius:3px; transition:color .1s,background .1s; }
+.del-btn:hover { color:var(--accent); background:#2a1020; }
+
+/* Media upload cell */
+.media-cell { display:flex; flex-direction:column; gap:3px; width:100%; }
+.media-upload-btn {
+  display:flex; align-items:center; gap:5px;
+  background:rgba(79,163,224,.08); border:1px dashed rgba(79,163,224,.35);
+  color:var(--bot-acc); border-radius:4px; padding:4px 7px;
+  font-size:.65rem; font-family:'Space Mono',monospace;
+  cursor:pointer; transition:all .15s; white-space:nowrap;
+  width:100%;
+}
+.media-upload-btn:hover { background:rgba(79,163,224,.18); border-color:var(--bot-acc); }
+.media-upload-btn input[type=file] { display:none; }
+.media-preview-thumb {
+  width:100%; height:44px;
+  object-fit:cover; border-radius:3px;
+  border:1px solid var(--card-border);
+  background:#000; display:block;
+}
+.media-preview-vid {
+  width:100%; height:44px;
+  object-fit:cover; border-radius:3px;
+  border:1px solid var(--card-border);
+  background:#000; display:block;
+}
+.media-name {
+  font-size:.58rem; color:var(--muted); font-family:'Space Mono',monospace;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:110px;
+}
+.media-clear-btn {
+  background:none; border:none; color:var(--accent); font-size:.62rem;
+  cursor:pointer; padding:0; font-family:'Space Mono',monospace; text-align:left;
+}
+.media-clear-btn:hover { text-decoration:underline; }
+
+/* ── API BAR ── */
+.api-bar { padding:8px 16px; border-top:1px solid var(--card-border); background:#0e0e22; display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+.api-lbl { font-family:'Space Mono',monospace; font-size:.62rem; color:var(--muted); white-space:nowrap; }
+.api-inp { background:var(--card-bg); border:1px solid var(--card-border); color:var(--text); padding:4px 7px; border-radius:4px; font-family:'Space Mono',monospace; font-size:.65rem; flex:1; min-width:140px; outline:none; }
+.api-inp:focus { border-color:var(--amber); }
+.api-status { font-family:'Space Mono',monospace; font-size:.6rem; padding:2px 6px; border-radius:3px; }
+.api-status.set   { background:var(--green-bg); color:var(--green-text); }
+.api-status.unset { background:rgba(233,69,96,.15); color:var(--accent); }
+
+/* ── LAUNCHER ── */
+.launcher { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; background:radial-gradient(ellipse at 50% 40%,#1a2050 0%,#0d0d1e 70%); position:relative; overflow:hidden; }
+.launcher::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(79,163,224,.04) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(79,163,224,.04) 40px); pointer-events:none; }
+.launch-icon { font-size:3.5rem; opacity:.6; }
+.launch-title { font-family:'Space Mono',monospace; font-size:1rem; color:var(--hdr-text); text-align:center; }
+.launch-sub { font-size:.78rem; color:var(--muted); text-align:center; max-width:300px; line-height:1.65; }
+.launch-btn { background:linear-gradient(135deg,var(--navy-light),#1a4a80); border:1px solid var(--bot-acc); color:#fff; padding:13px 34px; border-radius:8px; font-family:'Space Mono',monospace; font-size:.84rem; cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:9px; }
+.launch-btn:hover { transform:scale(1.04); box-shadow:0 0 28px rgba(79,163,224,.35); }
+
+/* ════════════════════════════════════════════════
+   PREVIEW MODAL  — video-player style
+   ════════════════════════════════════════════════ */
+.modal-backdrop {
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .25s;
+}
+.modal-backdrop.open { opacity:1; pointer-events:all; }
+
+.preview-modal {
+  width:880px; max-width:96vw;
+  background:#111;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.8);
+  transform:scale(.94) translateY(16px);
+  transition:transform .35s cubic-bezier(.34,1.2,.64,1);
+  display:flex; flex-direction:column;
+}
+.modal-backdrop.open .preview-modal { transform:scale(1) translateY(0); }
+
+/* — TOP BAR — */
+.modal-topbar {
+  background:#1a1a1a;
+  border-bottom:1px solid #2a2a2a;
+  padding:10px 16px;
+  display:flex; align-items:center; gap:12px;
+  flex-wrap:wrap;
+}
+.modal-title {
+  font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600;
+  color:#fff; flex:1;
+}
+.topbar-ctl { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+/* Play / Reset buttons — match screenshot style */
+.tbar-btn {
+  display:flex; align-items:center; gap:5px;
+  border-radius:5px; padding:5px 12px;
+  font-family:'DM Sans',sans-serif; font-size:.78rem; font-weight:500;
+  cursor:pointer; border:none; transition:all .15s;
+}
+.tbar-btn.play  { background:#1a3a5a; color:#4fa3e0; border:1px solid #2a5a8a; }
+.tbar-btn.play:hover  { background:#1e4a72; }
+.tbar-btn.play.active { background:#4fa3e0; color:#fff; }
+.tbar-btn.reset { background:#1e1e1e; color:#aaa; border:1px solid #333; }
+.tbar-btn.reset:hover { background:#2a2a2a; color:#fff; }
+.rec-badge {
+  display:flex; align-items:center; gap:5px;
+  background:#2a1a1a; border:1px solid #5a2a2a;
+  color:#e94560; border-radius:5px; padding:5px 10px;
+  font-size:.75rem; font-family:'DM Sans',sans-serif; font-weight:500;
+}
+.rec-dot { width:7px;height:7px;background:#e94560;border-radius:50%;animation:blink 1.2s infinite; }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.tbar-sep { width:1px; height:20px; background:#333; }
+
+/* Voice dropdowns */
+.voice-sel {
+  background:#1e1e1e; border:1px solid #333; color:#ccc;
+  padding:4px 8px; border-radius:5px;
+  font-family:'DM Sans',sans-serif; font-size:.75rem;
+  cursor:pointer; outline:none;
+}
+.voice-sel:focus { border-color:var(--bot-acc); }
+.voice-sel option { background:#1e1e1e; }
+
+/* Speed */
+.spd-sel {
+  background:#1e1e1e; border:1px solid #333; color:#ccc;
+  padding:4px 7px; border-radius:5px;
+  font-family:'DM Sans',sans-serif; font-size:.75rem;
+  cursor:pointer; outline:none; min-width:70px;
+}
+
+/* Step counter */
+.step-counter {
+  font-family:'Space Mono',monospace; font-size:.72rem;
+  color:#888; white-space:nowrap;
+}
+
+/* Credit label */
+.credit-lbl {
+  font-family:'DM Sans',sans-serif; font-size:.72rem;
+  color:#4fa3e0; white-space:nowrap; font-weight:500;
+}
+
+/* Close */
+.modal-close {
+  background:none; border:none; color:#666; cursor:pointer;
+  font-size:1.1rem; padding:2px 6px; border-radius:4px;
+  transition:color .15s,background .15s;
+}
+.modal-close:hover { color:#fff; background:#333; }
+
+/* — STAGE (the video area) — */
+.stage {
+  position:relative;
+  background:#000;
+  width:100%;
+  /* 16:9-ish but fixed height */
+  height:440px;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+
+/* Speaker label — top center */
+.speaker-label {
+  position:absolute; top:14px; left:50%; transform:translateX(-50%);
+  font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:.14em;
+  font-weight:700;
+  padding:3px 14px; border-radius:20px;
+  transition:opacity .3s;
+  z-index:10;
+}
+.speaker-label.bot  { color:#4fa3e0; background:rgba(79,163,224,.12); border:1px solid rgba(79,163,224,.25); }
+.speaker-label.user { color:#a04fe0; background:rgba(160,79,224,.12); border:1px solid rgba(160,79,224,.25); }
+
+/* Media fill */
+.stage-media {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .4s;
+}
+.stage-media img {
+  max-width:100%; max-height:100%;
+  object-fit:contain;
+  display:block;
+}
+.stage-media video {
+  max-width:100%; max-height:100%;
+  object-fit:contain;
+  display:block;
+}
+/* No-media placeholder — animated face or gradient */
+.stage-placeholder {
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:12px;
+  background:radial-gradient(ellipse at 50% 40%,#1a1a3a,#000);
+}
+.face-svg { opacity:.85; }
+
+/* Caption bar */
+.caption-bar {
+  position:absolute; bottom:0; left:0; right:0;
+  background:linear-gradient(0deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.6) 70%,transparent 100%);
+  padding:28px 40px 18px;
+  text-align:center;
+  min-height:80px;
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.caption-text {
+  font-family:'DM Sans',sans-serif; font-size:1.05rem; font-weight:400;
+  color:#fff; line-height:1.55;
+  text-shadow:0 2px 8px rgba(0,0,0,.9);
+  max-width:680px;
+  transition:opacity .35s;
+}
+.caption-text.fade { opacity:0; }
+.caption-text em { font-style:normal; color:#f59e0b; }
+
+/* — PROGRESS BAR — */
+.progress-wrap {
+  background:#1a1a1a;
+  border-top:1px solid #2a2a2a;
+  padding:0;
+}
+.progress-bar-outer {
+  width:100%; height:4px; background:#2a2a2a; cursor:pointer;
+}
+.progress-bar-inner {
+  height:100%;
+  background:linear-gradient(90deg,#4fa3e0,#a04fe0);
+  transition:width .4s linear;
+}
+
+/* — STATUS ROW — */
+.status-row {
+  background:#161616;
+  border-top:1px solid #222;
+  padding:8px 16px;
+  display:flex; align-items:center; gap:12px;
+}
+.status-step { font-family:'Space Mono',monospace; font-size:.65rem; color:#555; }
+.status-type { font-family:'Space Mono',monospace; font-size:.62rem; padding:2px 7px; border-radius:3px; }
+.status-type.play   { background:rgba(79,163,224,.12); color:#4fa3e0; }
+.status-type.prompt { background:rgba(245,158,11,.12); color:#f59e0b; }
+.ai-thinking { display:flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:.62rem; color:#f59e0b; }
+.spin { width:10px;height:10px;border:1.5px solid rgba(245,158,11,.2);border-top-color:#f59e0b;border-radius:50%;animation:spin .7s linear infinite;display:inline-block; }
+@keyframes spin{to{transform:rotate(360deg)}}
+.status-spacer { flex:1; }
+.mute-btn { background:none; border:1px solid #333; color:#666; padding:3px 8px; border-radius:4px; cursor:pointer; font-size:.72rem; transition:all .15s; }
+.mute-btn.on { border-color:var(--green-text); color:var(--green-text); }
+.mute-btn:hover { border-color:#4fa3e0; color:#fff; }
+
+/* Overlay "thinking" on stage */
+.thinking-overlay {
+  position:absolute; inset:0;
+  background:rgba(0,0,0,.5);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; z-index:20;
+  opacity:0; pointer-events:none; transition:opacity .3s;
+}
+.thinking-overlay.show { opacity:1; }
+.think-spin { width:36px;height:36px;border:3px solid rgba(245,158,11,.2);border-top-color:#f59e0b;border-radius:50%;animation:spin .8s linear infinite; }
+.think-txt { font-family:'Space Mono',monospace; font-size:.72rem; color:#f59e0b; }
+
+/* Animated bot face (SVG inline) */
+.face-eyes { animation:blink-eyes 3.5s infinite; transform-origin:center; }
+@keyframes blink-eyes {
+  0%,92%,100%{transform:scaleY(1)}
+  96%{transform:scaleY(0.08)}
+}
+.eye-pupil { animation:look 4s infinite ease-in-out; }
+@keyframes look {
+  0%,100%{transform:translate(0,0)}
+  30%{transform:translate(4px,-2px)}
+  60%{transform:translate(-3px,3px)}
+  80%{transform:translate(2px,0)}
+}
+
+/* Fade transition for stage content */
+.stage-content { width:100%;height:100%;position:relative; transition:opacity .35s; }
+.stage-content.fade { opacity:0; }
+
+/* Toast */
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(50px); background:#1a3a5a; border:1px solid #4fa3e0; color:#fff; padding:7px 16px; border-radius:7px; font-family:'Space Mono',monospace; font-size:.68rem; z-index:9999; transition:transform .3s,opacity .3s; opacity:0; pointer-events:none; }
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+.toast.err { border-color:var(--accent); background:#2a1020; }
+.toast.ok  { border-color:var(--green-text); background:#0d2a1e; }
+
+/* ════════════════════════════════════════════════
+   LOGIN OVERLAY  (per-browser profiles)
+   ════════════════════════════════════════════════ */
+.login-overlay {
+  position:fixed; inset:0; z-index:300;
+  background:radial-gradient(ellipse at 50% 40%,#1a2050 0%,#0d0d1e 70%);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+.login-overlay.hidden { display:none; }
+.login-overlay::before {
+  content:''; position:absolute; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(79,163,224,.04) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(79,163,224,.04) 40px);
+  pointer-events:none;
+}
+.login-card {
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:12px;
+  padding:32px 28px;
+  width:400px; max-width:100%;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+  position:relative;
+}
+.login-icon { font-size:2.4rem; text-align:center; margin-bottom:8px; }
+.login-title {
+  font-family:'Space Mono',monospace; font-size:.95rem;
+  color:var(--hdr-text); text-align:center; margin-bottom:6px;
+}
+.login-sub {
+  font-size:.7rem; color:var(--muted); text-align:center;
+  margin-bottom:22px; line-height:1.5;
+}
+.login-lbl {
+  font-family:'Space Mono',monospace; font-size:.6rem;
+  color:var(--muted); text-transform:uppercase; letter-spacing:.06em;
+  margin-bottom:6px; display:block;
+}
+.login-inp {
+  width:100%; background:var(--navy-mid);
+  border:1px solid var(--card-border); color:var(--text);
+  padding:9px 12px; border-radius:6px;
+  font-family:'DM Sans',sans-serif; font-size:.82rem;
+  outline:none; transition:border .15s;
+}
+.login-inp:focus { border-color:var(--bot-acc); }
+.login-btn {
+  width:100%; margin-top:14px;
+  background:linear-gradient(135deg,var(--navy-light),#1a4a80);
+  border:1px solid var(--bot-acc); color:#fff;
+  padding:10px; border-radius:6px;
+  font-family:'Space Mono',monospace; font-size:.78rem;
+  cursor:pointer; transition:all .15s;
+}
+.login-btn:hover { background:#1a4a80; box-shadow:0 0 20px rgba(79,163,224,.3); }
+.login-recent { margin-top:18px; padding-top:14px; border-top:1px solid var(--card-border); }
+.login-recent-lbl {
+  font-family:'Space Mono',monospace; font-size:.58rem;
+  color:var(--muted); text-transform:uppercase; letter-spacing:.06em;
+  margin-bottom:7px;
+}
+.login-recent-list { display:flex; flex-direction:column; gap:5px; max-height:140px; overflow-y:auto; }
+.login-recent-item {
+  background:var(--navy-mid); border:1px solid var(--card-border);
+  color:var(--text); padding:6px 10px; border-radius:5px;
+  font-family:'Space Mono',monospace; font-size:.7rem;
+  cursor:pointer; transition:all .15s;
+  display:flex; justify-content:space-between; align-items:center; gap:8px;
+}
+.login-recent-item:hover { border-color:var(--bot-acc); background:var(--navy-light); }
+.login-recent-item .lri-email { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.login-recent-item .lri-rm {
+  background:none; border:none; color:var(--muted);
+  font-size:.78rem; cursor:pointer; padding:2px 5px; flex-shrink:0;
+}
+.login-recent-item .lri-rm:hover { color:var(--accent); }
+.login-disclaimer {
+  margin-top:14px; padding:8px 10px;
+  background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.25);
+  border-radius:5px;
+  font-size:.6rem; color:#f59e0b; line-height:1.5;
+  font-family:'Space Mono',monospace;
+}
+.login-disclaimer b { color:#fbbf24; }
+
+/* ── USER BADGE (header) ── */
+.user-badge {
+  display:flex; align-items:center; gap:7px;
+  background:var(--green-bg); border:1px solid rgba(52,211,153,.3);
+  padding:3px 9px; border-radius:14px;
+  font-family:'Space Mono',monospace; font-size:.64rem;
+  color:var(--green-text);
+}
+.user-badge .udot { width:6px;height:6px;background:var(--green-text);border-radius:50%;flex-shrink:0; }
+.user-badge .uemail { max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.user-badge .uswitch {
+  background:none; border:none; color:var(--muted);
+  font-size:.6rem; cursor:pointer; padding:0 0 0 6px;
+  border-left:1px solid rgba(52,211,153,.25); margin-left:3px;
+  font-family:'Space Mono',monospace;
+}
+.user-badge .uswitch:hover { color:var(--white); }
+
+/* ════════════════════════════════════════════════
+   SAVED SCENARIOS PANEL
+   ════════════════════════════════════════════════ */
+.saved-panel {
+  position:fixed; inset:0; z-index:180;
+  background:rgba(0,0,0,.7); backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  opacity:0; pointer-events:none; transition:opacity .2s;
+}
+.saved-panel.open { opacity:1; pointer-events:all; }
+.saved-card {
+  background:var(--navy-mid); border:1px solid var(--card-border);
+  border-radius:10px; width:700px; max-width:100%;
+  max-height:82vh; display:flex; flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.saved-hdr {
+  padding:13px 18px;
+  border-bottom:1px solid var(--card-border);
+  background:#12122a;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.saved-hdr h3 {
+  font-family:'Space Mono',monospace; font-size:.78rem;
+  color:var(--hdr-text); text-transform:uppercase; letter-spacing:.06em;
+}
+.saved-hdr .sh-count { font-size:.62rem; color:var(--muted); font-family:'Space Mono',monospace; }
+.saved-list { overflow-y:auto; padding:10px; flex:1; }
+.saved-empty {
+  padding:50px 16px; text-align:center;
+  font-family:'Space Mono',monospace; font-size:.72rem;
+  color:var(--muted); line-height:1.8;
+}
+.saved-empty .se-icon { font-size:2rem; opacity:.4; margin-bottom:10px; }
+.saved-item {
+  background:var(--card-bg); border:1px solid var(--card-border);
+  border-radius:7px; padding:11px 13px; margin-bottom:7px;
+  display:flex; align-items:center; gap:10px;
+  transition:border-color .15s;
+  flex-wrap:wrap;
+}
+.saved-item:hover { border-color:var(--bot-acc); }
+.saved-info { flex:1; min-width:180px; }
+.saved-name {
+  font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500;
+  color:var(--hdr-text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.saved-meta {
+  font-family:'Space Mono',monospace; font-size:.58rem;
+  color:var(--muted); margin-top:3px;
+}
+.saved-actions { display:flex; gap:5px; flex-shrink:0; flex-wrap:wrap; }
+.saved-btn {
+  background:var(--navy-mid); border:1px solid var(--card-border);
+  color:var(--hdr-text); padding:5px 9px; border-radius:4px;
+  font-family:'Space Mono',monospace; font-size:.62rem;
+  cursor:pointer; transition:all .15s; white-space:nowrap;
+}
+.saved-btn:hover { background:var(--navy-light); border-color:var(--bot-acc); }
+.saved-btn.video { border-color:var(--green-text); color:var(--green-text); }
+.saved-btn.video:hover { background:var(--green-bg); }
+.saved-btn.del { border-color:var(--accent); color:var(--accent); }
+.saved-btn.del:hover { background:#2a1020; }
+
+/* ════════════════════════════════════════════════
+   PROMPT MODALS  (save name + download instructions)
+   ════════════════════════════════════════════════ */
+.prompt-modal {
+  position:fixed; inset:0; z-index:220;
+  background:rgba(0,0,0,.78); backdrop-filter:blur(5px);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  opacity:0; pointer-events:none; transition:opacity .2s;
+}
+.prompt-modal.open { opacity:1; pointer-events:all; }
+.prompt-card {
+  background:var(--card-bg); border:1px solid var(--card-border);
+  border-radius:10px; padding:22px 24px;
+  width:460px; max-width:100%;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.prompt-title {
+  font-family:'Space Mono',monospace; font-size:.78rem;
+  color:var(--hdr-text); margin-bottom:14px;
+}
+.prompt-row { display:flex; gap:8px; margin-top:18px; justify-content:flex-end; }
+.rec-info {
+  margin-top:14px; padding:10px 12px;
+  background:rgba(79,163,224,.08); border:1px solid rgba(79,163,224,.25);
+  border-radius:5px;
+  font-size:.7rem; color:var(--text); line-height:1.7;
+}
+.rec-info b { color:var(--bot-acc); }
+.rec-info.warn {
+  background:rgba(245,158,11,.08); border-color:rgba(245,158,11,.3);
+}
+.rec-info.warn b { color:var(--amber); }
+
+/* ── RECORDING INDICATOR (top of screen during capture) ── */
+.rec-overlay {
+  position:fixed; top:12px; left:50%; transform:translateX(-50%);
+  z-index:400;
+  background:#2a1010; border:1px solid var(--accent);
+  color:#fff; padding:8px 16px; border-radius:8px;
+  font-family:'Space Mono',monospace; font-size:.7rem;
+  display:none; align-items:center; gap:9px;
+  box-shadow:0 8px 24px rgba(233,69,96,.4);
+}
+.rec-overlay.show { display:flex; }
+.rec-overlay .rdot {
+  width:8px;height:8px;background:var(--accent);
+  border-radius:50%; animation:blink 1s infinite;
+}
+
+@media(max-width:820px){
+  .app{flex-direction:column;height:auto;overflow:visible}
+  .editor{width:100%;min-width:unset;border-right:none;border-bottom:1px solid var(--card-border);max-height:50vh}
+  .launcher{min-height:200px}
+  .preview-modal{width:98vw}
+  .stage{height:300px}
+  .caption-text{font-size:.9rem}
+  .login-card{padding:24px 20px}
+  .user-badge .uemail{max-width:100px}
+}
+</style>
+</head>
+<body>
+
+<!-- ──────────────────────────────────────────────
+     LOGIN OVERLAY (per-browser local profile)
+     ────────────────────────────────────────────── -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-icon">👤</div>
+    <div class="login-title">Bot Flow Preview</div>
+    <div class="login-sub">Enter your email to access your saved scenarios.</div>
+    <label class="login-lbl" for="loginEmail">Email</label>
+    <input class="login-inp" type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Continue →</button>
+    <div class="login-recent" id="loginRecent" style="display:none">
+      <div class="login-recent-lbl">Recent on this browser</div>
+      <div class="login-recent-list" id="loginRecentList"></div>
+    </div>
+    <div class="login-disclaimer">
+      ⚠ <b>Local profile only.</b> Your scenarios are stored in this browser, not on a server. Anyone with access to this device can pick any email — this is not real authentication.
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="htitle"><span>⚙️</span><h1>Skill Testing &amp; Scenario Format — Bot Flow Preview</h1></div>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div class="user-badge" id="userBadge" style="display:none">
+      <div class="udot"></div>
+      <span class="uemail" id="userEmail"></span>
+      <button class="uswitch" onclick="switchUser()" title="Switch profile">Switch</button>
+    </div>
+    <div class="credit">📝 Created by <b>Pooja Mishra</b></div>
+  </div>
+</header>
+
+<div class="app">
+  <!-- EDITOR -->
+  <div class="editor">
+    <div class="pnl-hdr">
+      <h2>📄 ConversationFlow Sheet</h2>
+      <span class="rc" id="rowCount">0 rows</span>
+    </div>
+    <div class="toolbar">
+      <button class="btn primary" onclick="resetSheet()">⚙ New ConversationFlow</button>
+      <button class="btn green"   onclick="addRow()">➕ Add Row</button>
+      <button class="btn"         onclick="sortRows()">↕ Sort</button>
+      <button class="btn"         onclick="openSavePrompt()">💾 Save</button>
+      <button class="btn"         onclick="openSavedPanel()">📁 Saved</button>
+      <button class="btn danger"  onclick="clearAll()">✕ Clear</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th class="td-order">A<br>Order</th>
+          <th class="td-type">B<br>Type</th>
+          <th class="td-spk">C<br>Speaker</th>
+          <th class="td-media">D<br>Image / Video</th>
+          <th class="audio-col" style="min-width:90px">E<br>Audio URL</th>
+          <th style="min-width:140px">F<br>Text / Message</th>
+          <th style="min-width:110px">G<br>System Prompt</th>
+          <th class="td-del"></th>
+        </tr></thead>
+        <tbody id="sheetBody"></tbody>
+      </table>
+    </div>
+    <div class="api-bar">
+      <span class="api-lbl">🔑 Gemini Key:</span>
+      <input class="api-inp" type="password" id="apiKeyInput" placeholder="aistudio.google.com/app/apikey">
+      <button class="btn green" style="padding:4px 9px" onclick="saveApiKey()">Save</button>
+      <span class="api-status unset" id="apiStatus">Not set</span>
+    </div>
+  </div>
+
+  <!-- LAUNCHER -->
+  <div class="launcher">
+    <div class="launch-icon">🎬</div>
+    <div class="launch-title">Bot Flow Preview</div>
+    <div class="launch-sub">Build your conversation in the sheet on the left, then click Run Preview to play it like a video — image, text and audio all together on screen.</div>
+    <button class="launch-btn" onclick="openPreview()"><span>▶</span> Run Preview</button>
+  </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="preview-modal">
+
+    <!-- TOP BAR -->
+    <div class="modal-topbar">
+      <span class="modal-title">Bot Flow Preview</span>
+      <div class="topbar-ctl">
+        <button class="tbar-btn play active" id="playBtn" onclick="togglePause()">▶ Play</button>
+        <button class="tbar-btn reset" onclick="restartPreview()">↺</button>
+        <div class="rec-badge"><div class="rec-dot"></div> Rec</div>
+        <div class="tbar-sep"></div>
+        <span style="font-size:.72rem;color:#666;font-family:'Space Mono',monospace">🤖</span>
+        <select class="voice-sel" id="botVoiceSel" title="Bot voice"></select>
+        <span style="font-size:.72rem;color:#666;font-family:'Space Mono',monospace">👤</span>
+        <select class="voice-sel" id="userVoiceSel" title="User voice"></select>
+        <select class="spd-sel" id="speedSel">
+          <option value="600">Fast</option>
+          <option value="1200" selected>Normal</option>
+          <option value="2200">Slow</option>
+        </select>
+        <div class="tbar-sep"></div>
+        <span class="step-counter" id="stepCounter">1 / 1</span>
+        <div class="tbar-sep"></div>
+        <span class="credit-lbl">Created by Pooja Mishra</span>
+      </div>
+      <button class="modal-close" onclick="closePreview()">✕</button>
+    </div>
+
+    <!-- STAGE -->
+    <div class="stage" id="stage">
+      <!-- Speaker label -->
+      <div class="speaker-label bot" id="speakerLabel" style="opacity:0">BOT</div>
+
+      <!-- Main content -->
+      <div class="stage-content" id="stageContent">
+        <!-- filled dynamically -->
+        <div class="stage-placeholder" id="stagePlaceholder">
+          <svg class="face-svg" width="220" height="180" viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- face bg -->
+            <rect width="220" height="180" rx="24" fill="#111"/>
+            <!-- eyebrows -->
+            <g class="face-eyes">
+              <path d="M62 58 Q78 48 94 56" stroke="#6ab0e0" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <path d="M126 56 Q142 48 158 58" stroke="#6ab0e0" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <!-- left eye -->
+              <circle cx="78" cy="90" r="26" fill="#fff"/>
+              <circle cx="78" cy="90" r="18" fill="#ddd"/>
+              <circle cx="78" cy="90" r="11" fill="#3a2060"/>
+              <circle class="eye-pupil" cx="78" cy="90" r="7" fill="#1a0a30"/>
+              <circle cx="84" cy="84" r="4" fill="#fff" opacity=".8"/>
+              <!-- right eye -->
+              <circle cx="142" cy="90" r="26" fill="#fff"/>
+              <circle cx="142" cy="90" r="18" fill="#ddd"/>
+              <circle cx="142" cy="90" r="11" fill="#3a2060"/>
+              <circle class="eye-pupil" cx="142" cy="90" r="7" fill="#1a0a30"/>
+              <circle cx="148" cy="84" r="4" fill="#fff" opacity=".8"/>
+            </g>
+            <!-- smile -->
+            <path d="M82 136 Q110 154 138 136" stroke="#6ab0e0" stroke-width="4" stroke-linecap="round" fill="none"/>
+          </svg>
+          <div style="font-family:'Space Mono',monospace;font-size:.7rem;color:#444">Click ▶ Play to begin</div>
+        </div>
+        <div class="stage-media" id="stageMedia" style="display:none;position:absolute;inset:0"></div>
+      </div>
+
+      <!-- "Thinking" overlay for Gemini calls -->
+      <div class="thinking-overlay" id="thinkingOverlay">
+        <div class="think-spin"></div>
+        <div class="think-txt">Calling Gemini AI…</div>
+      </div>
+
+      <!-- Caption -->
+      <div class="caption-bar">
+        <div class="caption-text fade" id="captionText"></div>
+      </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="progress-bar-outer" id="progressOuter">
+        <div class="progress-bar-inner" id="progressInner" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- STATUS ROW -->
+    <div class="status-row">
+      <span class="status-step" id="statusStep">Step — / —</span>
+      <span class="status-type" id="statusType"></span>
+      <div class="ai-thinking" id="aiThinking" style="display:none"><div class="spin"></div> AI generating…</div>
+      <div class="status-spacer"></div>
+      <button class="mute-btn on" id="muteBtn" onclick="toggleMute()">🔊 Voice</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ──────────────────────────────────────────────
+     SAVED SCENARIOS PANEL
+     ────────────────────────────────────────────── -->
+<div class="saved-panel" id="savedPanel">
+  <div class="saved-card">
+    <div class="saved-hdr">
+      <h3>📁 Your Saved Scenarios</h3>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="sh-count" id="savedCount">0 saved</span>
+        <button class="modal-close" onclick="closeSavedPanel()">✕</button>
+      </div>
+    </div>
+    <div class="saved-list" id="savedList"></div>
+  </div>
+</div>
+
+<!-- SAVE NAME PROMPT -->
+<div class="prompt-modal" id="savePrompt">
+  <div class="prompt-card">
+    <div class="prompt-title">💾 Save current scenario</div>
+    <label class="login-lbl" for="saveName">Name</label>
+    <input class="login-inp" type="text" id="saveName" placeholder="e.g. Password reset flow" onkeydown="if(event.key==='Enter')doSave()">
+    <div class="rec-info" id="saveMediaWarn" style="display:none">
+      ℹ <b>Uploaded images & videos</b> will be stored in this browser (IndexedDB) and played back exactly as you uploaded them when you reload this scenario. Files stay in this browser — they don't sync to other devices.
+    </div>
+    <div class="prompt-row">
+      <button class="btn" onclick="closeSavePrompt()">Cancel</button>
+      <button class="btn primary" onclick="doSave()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOWNLOAD-AS-VIDEO INSTRUCTIONS -->
+<div class="prompt-modal" id="dlPrompt">
+  <div class="prompt-card">
+    <div class="prompt-title">🎥 Download as video</div>
+    <div style="font-size:.74rem;line-height:1.6;color:var(--text)">
+      Your browser will ask you to share a tab. To capture <b style="color:var(--bot-acc)">audio</b> in the video file:
+      <div class="rec-info">
+        1. Choose <b>"Chrome Tab"</b> (not entire screen).<br>
+        2. Pick <b>this tab</b> from the list.<br>
+        3. Toggle <b>"Share tab audio"</b> ON (bottom-left of the picker).<br>
+        4. Click <b>Share</b>. Don't switch tabs while it records.
+      </div>
+      <div style="margin-top:10px;font-size:.64rem;color:var(--muted);font-family:'Space Mono',monospace">
+        Works in Chrome / Edge. Firefox: video only (no tab audio). Safari: not supported.
+      </div>
+    </div>
+    <div class="prompt-row">
+      <button class="btn" onclick="closeDlPrompt()">Cancel</button>
+      <button class="btn primary" onclick="confirmDownload()">Start Recording</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECORDING INDICATOR -->
+<div class="rec-overlay" id="recOverlay">
+  <div class="rdot"></div>
+  <span>RECORDING — preview will play through, file downloads when done</span>
+</div>
+
+<script>
+/* ── STATE ── */
+let rows=[], apiKey='';
+let steps=[], stepIdx=0;
+let running=false, paused=false;
+let stepTimer=null, muted=false;
+let voices=[];
+/* ── NEW STATE: user profiles & recording ── */
+let currentUser=null;            // email string when logged in
+let onPreviewEnd=null;           // callback fired when preview completes (used by recorder)
+let pendingDownloadId=null;      // scenario id queued for download
+let activeRecorder=null;         // current MediaRecorder
+let activeStream=null;           // current capture MediaStream
+
+/* ── UTILS ── */
+const $  = id=>document.getElementById(id);
+const uid= ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const esc= s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const escA=s=>(s||'').replace(/"/g,'&quot;');
+const trm=(s,n)=>s.length>n?s.slice(0,n)+'…':s;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ── VOICE INIT ── */
+function loadVoices(){
+  voices=window.speechSynthesis?.getVoices()||[];
+  if(!voices.length) return;
+  populateVoiceDrop('botVoiceSel', voices);
+  populateVoiceDrop('userVoiceSel', voices);
+  // defaults
+  const defBot =voices.find(v=>/daniel|david|mark|alex|male/i.test(v.name))||voices[0];
+  const defUser=voices.find(v=>/samantha|karen|zira|victoria|female/i.test(v.name))||voices[Math.min(1,voices.length-1)];
+  if(defBot)  $('botVoiceSel').value=defBot.name;
+  if(defUser) $('userVoiceSel').value=defUser.name;
+}
+function populateVoiceDrop(selId, vlist){
+  const sel=$(selId); sel.innerHTML='';
+  vlist.forEach(v=>{
+    const o=document.createElement('option');
+    o.value=v.name; o.textContent=`${v.name} (${v.lang})`;
+    sel.appendChild(o);
+  });
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged=loadVoices;
+  loadVoices();
+}
+
+/* ── SHEET ── */
+function resetSheet(){
+  if(rows.length&&!confirm('Replace with sample data?')) return;
+  rows=[
+    {id:uid(),order:1,type:'play',  speaker:'bot', imageUrl:'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80',audioUrl:'',text:"Hi there! 👋 Welcome to our support assistant. How can I help you today?",systemPrompt:''},
+    {id:uid(),order:2,type:'play',  speaker:'user',imageUrl:'',audioUrl:'',text:"I need help resetting my password.",systemPrompt:''},
+    {id:uid(),order:3,type:'play',  speaker:'bot', imageUrl:'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=800&q=80',audioUrl:'',text:"Sure! I can help with that. Let me walk you through the steps. 🔒",systemPrompt:''},
+    {id:uid(),order:4,type:'prompt',speaker:'bot', imageUrl:'',audioUrl:'',text:"Can you explain how to reset a forgotten password in 2 short steps?",systemPrompt:"You are Aria, a helpful support bot. Respond in 1–2 short sentences, friendly and concise."},
+    {id:uid(),order:5,type:'play',  speaker:'bot', imageUrl:'',audioUrl:'',text:"Is there anything else I can help you with today? 😊",systemPrompt:''},
+  ];
+  renderTable(); toast('✓ Sample data loaded','ok');
+}
+function addRow(){ const m=rows.length?Math.max(...rows.map(r=>r.order)):0; rows.push({id:uid(),order:m+1,type:'play',speaker:'bot',imageUrl:'',audioUrl:'',text:'',systemPrompt:''}); renderTable(); }
+function deleteRow(id){
+  const r=rows.find(r=>r.id===id);
+  if(r&&r.mediaBlobUrl) URL.revokeObjectURL(r.mediaBlobUrl);
+  rows=rows.filter(r=>r.id!==id); renderTable();
+}
+function clearAll(){ if(!confirm('Clear all?')) return; rows.forEach(r=>{if(r.mediaBlobUrl)URL.revokeObjectURL(r.mediaBlobUrl);}); rows=[]; renderTable(); }
+function sortRows(){ rows.sort((a,b)=>+a.order-+b.order); renderTable(); }
+function updateRow(id,f,v){ const r=rows.find(r=>r.id===id); if(r) r[f]=f==='order'?+v:v; }
+
+function handleMediaUpload(rowId, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const r = rows.find(r => r.id === rowId);
+  if (!r) return;
+  // revoke old blob to avoid memory leak
+  if (r.mediaBlobUrl) URL.revokeObjectURL(r.mediaBlobUrl);
+  const blobUrl = URL.createObjectURL(file);
+  r.mediaBlobUrl = blobUrl;
+  r.mediaFileName = file.name;
+  r.mediaType = file.type.startsWith('video') ? 'video' : 'image';
+  // imageUrl still used by preview engine — point it to blob
+  r.imageUrl = blobUrl;
+  renderTable();
+}
+
+function clearMedia(rowId) {
+  const r = rows.find(r => r.id === rowId);
+  if (!r) return;
+  if (r.mediaBlobUrl) URL.revokeObjectURL(r.mediaBlobUrl);
+  r.mediaBlobUrl = null; r.mediaFileName = null; r.mediaType = null; r.imageUrl = '';
+  renderTable();
+}
+
+function buildMediaCell(row) {
+  const td = document.createElement('td');
+  td.className = 'td-media';
+  const wrap = document.createElement('div');
+  wrap.className = 'media-cell';
+
+  if (row.mediaBlobUrl) {
+    // Show thumbnail + filename + clear button
+    if (row.mediaType === 'video') {
+      const vid = document.createElement('video');
+      vid.src = row.mediaBlobUrl;
+      vid.className = 'media-preview-vid';
+      vid.muted = true;
+      wrap.appendChild(vid);
+    } else {
+      const img = document.createElement('img');
+      img.src = row.mediaBlobUrl;
+      img.className = 'media-preview-thumb';
+      wrap.appendChild(img);
+    }
+    const name = document.createElement('div');
+    name.className = 'media-name';
+    name.title = row.mediaFileName;
+    name.textContent = row.mediaFileName;
+    wrap.appendChild(name);
+    const clr = document.createElement('button');
+    clr.className = 'media-clear-btn';
+    clr.textContent = '✕ Remove';
+    clr.onclick = () => clearMedia(row.id);
+    wrap.appendChild(clr);
+  } else {
+    // Upload button
+    const label = document.createElement('label');
+    label.className = 'media-upload-btn';
+    label.title = 'Upload image or video';
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*,video/*';
+    fileInput.onchange = () => handleMediaUpload(row.id, fileInput);
+    label.appendChild(fileInput);
+    label.appendChild(document.createTextNode('📁 Upload'));
+    wrap.appendChild(label);
+  }
+  td.appendChild(wrap);
+  return td;
+}
+
+function renderTable(){
+  $('rowCount').textContent=rows.length+' row'+(rows.length!==1?'s':'');
+  const tb=$('sheetBody'); tb.innerHTML='';
+  rows.forEach(row=>{
+    const tr=document.createElement('tr');
+    // Build all plain cells via innerHTML for speed, then insert media cell manually
+    tr.innerHTML=`
+      <td class="td-order"><input type="number" value="${row.order}" min="1" style="width:34px;text-align:center" onchange="updateRow('${row.id}','order',this.value)"></td>
+      <td class="td-type"><select onchange="updateRow('${row.id}','type',this.value)"><option value="play" ${row.type==='play'?'selected':''}>play</option><option value="prompt" ${row.type==='prompt'?'selected':''}>prompt</option></select></td>
+      <td class="td-spk"><select onchange="updateRow('${row.id}','speaker',this.value)"><option value="bot" ${row.speaker==='bot'?'selected':''}>bot</option><option value="user" ${row.speaker==='user'?'selected':''}>user</option></select></td>
+      <td class="media-placeholder-slot"></td>
+      <td><input type="text" placeholder="Audio URL" value="${escA(row.audioUrl)}" onchange="updateRow('${row.id}','audioUrl',this.value)"></td>
+      <td><textarea rows="2" placeholder="Text / message" onchange="updateRow('${row.id}','text',this.value)">${esc(row.text)}</textarea></td>
+      <td><textarea rows="2" placeholder="System prompt" onchange="updateRow('${row.id}','systemPrompt',this.value)">${esc(row.systemPrompt)}</textarea></td>
+      <td class="td-del"><button class="del-btn" onclick="deleteRow('${row.id}')">✕</button></td>`;
+    // Replace placeholder slot with proper media cell
+    const slot = tr.querySelector('.media-placeholder-slot');
+    tr.replaceChild(buildMediaCell(row), slot);
+    tb.appendChild(tr);
+  });
+}
+
+/* ── API KEY ── */
+function saveApiKey(){
+  const v=$('apiKeyInput').value.trim();
+  if(!v){toast('Enter a key first','err');return;}
+  apiKey=v; $('apiKeyInput').value='';
+  $('apiStatus').textContent='✓ Saved'; $('apiStatus').className='api-status set';
+  toast('🔑 Key saved','ok');
+}
+
+/* ── GEMINI ── */
+async function callGemini(sys,msg){
+  if(!apiKey) return '⚠️ No API key set.';
+  const system=sys||'You are a friendly bot. Be concise, max 2 sentences.';
+  try{
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({system_instruction:{parts:[{text:system}]},contents:[{role:'user',parts:[{text:msg}]}],generationConfig:{temperature:0.7,maxOutputTokens:512}})
+    });
+    const d=await r.json();
+    if(d.error) return '⚠️ '+d.error.message;
+    return d.candidates?.[0]?.content?.parts?.[0]?.text||'(no response)';
+  }catch(e){return '⚠️ '+e.message;}
+}
+
+/* ── TTS ── */
+function speak(text, speaker){
+  return new Promise(resolve=>{
+    if(muted||!window.speechSynthesis){resolve();return;}
+    window.speechSynthesis.cancel();
+    const clean=text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').replace(/\s+/g,' ').trim();
+    if(!clean){resolve();return;}
+    const utt=new SpeechSynthesisUtterance(clean);
+    utt.rate=1.0; utt.volume=1; utt.pitch=1;
+    const selId=speaker==='bot'?'botVoiceSel':'userVoiceSel';
+    const chosenName=$(selId)?.value;
+    const chosenVoice=voices.find(v=>v.name===chosenName);
+    if(chosenVoice) utt.voice=chosenVoice;
+    utt.onend=resolve; utt.onerror=resolve;
+    window.speechSynthesis.speak(utt);
+    setTimeout(resolve,40000);
+  });
+}
+
+function playAudioUrl(url){
+  return new Promise(resolve=>{
+    if(!url||muted){resolve();return;}
+    if(/drive\.google/i.test(url)){resolve();return;}
+    try{
+      const a=new Audio(url);
+      a.onended=resolve; a.onerror=resolve;
+      a.play().catch(resolve);
+      setTimeout(resolve,12000);
+    }catch(e){resolve();}
+  });
+}
+
+/* ── PREVIEW ── */
+function openPreview(){
+  if(!rows.length){toast('Add rows first','err');return;}
+  $('modalBackdrop').classList.add('open');
+  startPreview();
+}
+function closePreview(){
+  $('modalBackdrop').classList.remove('open');
+  stopAll();
+}
+function stopAll(){
+  clearTimeout(stepTimer);
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  running=false; paused=false;
+}
+
+async function startPreview(){
+  stopAll();
+  // reset stage to placeholder
+  showPlaceholder();
+  setCaption('',true);
+  $('speakerLabel').style.opacity='0';
+  $('progressInner').style.width='0%';
+  $('statusStep').textContent='Step — / —';
+  $('statusType').textContent='';
+  $('playBtn').textContent='⏸ Pause';
+  $('playBtn').classList.add('active');
+
+  steps=[...rows].sort((a,b)=>+a.order-+b.order).filter(r=>r.text||r.audioUrl);
+  if(!steps.length){toast('No content rows','err');return;}
+
+  running=true; paused=false; stepIdx=0;
+  $('stepCounter').textContent=`1 / ${steps.length}`;
+  await wait(300);
+  processStep();
+}
+
+async function processStep(){
+  if(!running||paused) return;
+  if(stepIdx>=steps.length){
+    $('playBtn').textContent='▶ Play';
+    $('playBtn').classList.remove('active');
+    running=false;
+    // Notify any listener (e.g. video recorder) that the preview is done
+    if(typeof onPreviewEnd==='function'){ try{ onPreviewEnd(); }catch(e){} }
+    return;
+  }
+
+  const step=steps[stepIdx];
+  const total=steps.length, cur=stepIdx+1;
+
+  // Update counters
+  $('stepCounter').textContent=`${cur} / ${total}`;
+  $('statusStep').textContent=`Step ${step.order} of ${total}`;
+  $('progressInner').style.width=`${(cur/total)*100}%`;
+
+  // Update status type badge
+  const tb=$('statusType');
+  tb.textContent=step.type; tb.className='status-type '+step.type;
+
+  // Speaker label
+  const sl=$('speakerLabel');
+  sl.textContent=step.speaker.toUpperCase();
+  sl.className='speaker-label '+step.speaker;
+  sl.style.opacity='1';
+
+  // Fade caption out
+  setCaption('',true);
+  await wait(200);
+
+  // Resolve text first (for prompt rows — show thinking overlay)
+  let text=step.text;
+  if(step.type==='prompt'&&step.speaker==='bot'){
+    $('thinkingOverlay').classList.add('show');
+    $('aiThinking').style.display='flex';
+    text=await callGemini(step.systemPrompt,step.text);
+    $('thinkingOverlay').classList.remove('show');
+    $('aiThinking').style.display='none';
+    await wait(150);
+  }
+
+  // Transition stage media
+  await transitionStage(step);
+
+  // Show caption
+  setCaption(text, false);
+
+  // Speak & audio in parallel
+  await Promise.all([
+    speak(text, step.speaker),
+    playAudioUrl(step.audioUrl)
+  ]);
+
+  // Pause between steps
+  const delay=parseInt($('speedSel').value);
+  stepIdx++;
+  if(running&&!paused) stepTimer=setTimeout(processStep, delay);
+}
+
+/* Stage transition */
+async function transitionStage(step){
+  const content=$('stageContent');
+  content.classList.add('fade');
+  await wait(320);
+
+  const media=$('stageMedia');
+  const ph=$('stagePlaceholder');
+
+  if(step.imageUrl){
+    // Detect video: either uploaded (mediaType=video) or URL ends in video ext
+    const isVid = step.mediaType==='video' || /\.(mp4|webm|ogg)/i.test(step.imageUrl);
+    ph.style.display='none';
+    media.style.display='flex';
+    media.innerHTML='';
+    if(isVid){
+      const v=document.createElement('video');
+      v.src=step.imageUrl;
+      v.autoplay=true;
+      v.muted=false; // allow audio from uploaded video
+      v.loop=true;
+      v.controls=false;
+      v.style.cssText='max-width:100%;max-height:100%;object-fit:contain;display:block';
+      media.appendChild(v);
+      v.play().catch(()=>{});
+    } else {
+      const img=document.createElement('img');
+      img.src=step.imageUrl;
+      img.style.cssText='max-width:100%;max-height:100%;object-fit:contain;display:block';
+      img.onerror=()=>{ media.style.display='none'; ph.style.display='flex'; };
+      media.appendChild(img);
+    }
+  } else {
+    media.style.display='none';
+    ph.style.display='flex';
+  }
+
+  content.classList.remove('fade');
+}
+
+/* Caption helper */
+function setCaption(text, fade){
+  const el=$('captionText');
+  if(fade){ el.classList.add('fade'); el.textContent=''; return; }
+  el.textContent=text;
+  el.classList.remove('fade');
+}
+
+/* Placeholder */
+function showPlaceholder(){
+  $('stageMedia').style.display='none';
+  $('stagePlaceholder').style.display='flex';
+}
+
+function togglePause(){
+  if(!running&&stepIdx>=(steps.length||1)){startPreview();return;}
+  paused=!paused;
+  if(paused){
+    clearTimeout(stepTimer);
+    if(window.speechSynthesis) window.speechSynthesis.pause();
+    $('playBtn').textContent='▶ Play';
+    $('playBtn').classList.remove('active');
+  } else {
+    if(window.speechSynthesis) window.speechSynthesis.resume();
+    $('playBtn').textContent='⏸ Pause';
+    $('playBtn').classList.add('active');
+    processStep();
+  }
+}
+
+function restartPreview(){ startPreview(); }
+
+function toggleMute(){
+  muted=!muted;
+  $('muteBtn').textContent=muted?'🔇 Muted':'🔊 Voice';
+  $('muteBtn').className='mute-btn'+(muted?'':' on');
+  if(muted&&window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+/* Toast */
+function toast(msg,type=''){
+  const el=$('toast'); el.textContent=msg;
+  el.className='toast show '+type;
+  setTimeout(()=>el.className='toast',2800);
+}
+
+/* Click backdrop to close */
+$('modalBackdrop').addEventListener('click',e=>{if(e.target===$('modalBackdrop'))closePreview();});
+
+/* ════════════════════════════════════════════════════════════════════
+   USER PROFILE SYSTEM  (local-only, per-browser)
+   ════════════════════════════════════════════════════════════════════
+   Schema:
+     localStorage['bfp_currentUser']        = email (or absent)
+     localStorage['bfp_user_<email>']       = JSON { scenarios: [...] }
+   Each scenario: { id, name, savedAt, rows: [...] }
+   ════════════════════════════════════════════════════════════════════ */
+
+const LS_CURRENT = 'bfp_currentUser';
+const LS_USER_PREFIX = 'bfp_user_';
+
+function userKey(email){ return LS_USER_PREFIX + email.toLowerCase().trim(); }
+
+function getUserData(email=currentUser){
+  if(!email) return { scenarios:[] };
+  try{
+    const raw = localStorage.getItem(userKey(email));
+    if(!raw) return { scenarios:[] };
+    const d = JSON.parse(raw);
+    if(!d.scenarios) d.scenarios = [];
+    return d;
+  }catch(e){ return { scenarios:[] }; }
+}
+
+function saveUserData(data, email=currentUser){
+  if(!email) return false;
+  try{
+    localStorage.setItem(userKey(email), JSON.stringify(data));
+    return true;
+  }catch(e){
+    toast('⚠ Storage full — try deleting old scenarios','err');
+    return false;
+  }
+}
+
+function listLocalProfiles(){
+  const out=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k && k.startsWith(LS_USER_PREFIX)){
+      const email = k.slice(LS_USER_PREFIX.length);
+      let count = 0;
+      try{ count = (JSON.parse(localStorage.getItem(k)||'{}').scenarios||[]).length; }catch(e){}
+      out.push({ email, count });
+    }
+  }
+  return out.sort((a,b)=>a.email.localeCompare(b.email));
+}
+
+function renderRecentUsers(){
+  const profiles = listLocalProfiles();
+  const wrap = $('loginRecent');
+  const list = $('loginRecentList');
+  if(!profiles.length){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  list.innerHTML = '';
+  profiles.forEach(p=>{
+    const item = document.createElement('div');
+    item.className = 'login-recent-item';
+    item.innerHTML = `
+      <span class="lri-email" title="${escA(p.email)}">${esc(p.email)}</span>
+      <span style="color:var(--muted);font-size:.6rem">${p.count} saved</span>
+      <button class="lri-rm" title="Remove profile from this browser">✕</button>`;
+    item.querySelector('.lri-email').onclick = ()=>{ $('loginEmail').value = p.email; doLogin(); };
+    item.querySelector('.lri-rm').onclick = async (e)=>{
+      e.stopPropagation();
+      if(!confirm(`Delete local profile "${p.email}" and all its saved scenarios (including uploaded media)?`)) return;
+      // Clean up any IDB media owned by this profile's scenarios
+      try{
+        const d = JSON.parse(localStorage.getItem(userKey(p.email))||'{}');
+        for(const sc of (d.scenarios||[])){
+          for(const r of (sc.rows||[])){
+            if(r.mediaKey){ await deleteMedia(r.mediaKey); }
+          }
+        }
+      }catch(err){}
+      localStorage.removeItem(userKey(p.email));
+      renderRecentUsers();
+    };
+    list.appendChild(item);
+  });
+}
+
+function showLogin(){
+  $('loginOverlay').classList.remove('hidden');
+  renderRecentUsers();
+  setTimeout(()=>$('loginEmail').focus(), 100);
+}
+
+function hideLogin(){ $('loginOverlay').classList.add('hidden'); }
+
+function doLogin(){
+  const v = $('loginEmail').value.trim().toLowerCase();
+  if(!v){ toast('Enter an email first','err'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){ toast('That doesn\'t look like an email','err'); return; }
+  currentUser = v;
+  localStorage.setItem(LS_CURRENT, v);
+  // Ensure their bucket exists so renderRecentUsers picks them up next time
+  if(!localStorage.getItem(userKey(v))) saveUserData({ scenarios:[] });
+  $('userEmail').textContent = v;
+  $('userBadge').style.display = 'flex';
+  hideLogin();
+  // Load sample data only if their bucket is empty AND no rows already loaded
+  if(!rows.length) resetSheet();
+  toast(`👋 Welcome, ${v}`,'ok');
+}
+
+function switchUser(){
+  if(!confirm('Switch to a different profile? Anything unsaved in the editor will be cleared.')) return;
+  // Clean up any blob URLs
+  rows.forEach(r=>{ if(r.mediaBlobUrl && r.mediaBlobUrl.startsWith('blob:')) URL.revokeObjectURL(r.mediaBlobUrl); });
+  rows = [];
+  apiKey = '';
+  $('apiStatus').textContent='Not set'; $('apiStatus').className='api-status unset';
+  renderTable();
+  currentUser = null;
+  localStorage.removeItem(LS_CURRENT);
+  $('userBadge').style.display = 'none';
+  $('loginEmail').value = '';
+  showLogin();
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SAVE / LOAD SCENARIOS
+   ════════════════════════════════════════════════════════════════════
+   Uploaded media (images + videos) is stored in IndexedDB. Each saved
+   row references a `mediaKey`; the bytes live in IDB, not localStorage.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── IndexedDB wrapper (one object store, keyed by string id) ── */
+let _mediaDB = null;
+const MEDIA_DB_NAME  = 'bfp_media';
+const MEDIA_STORE    = 'media';
+
+function openMediaDB(){
+  if(_mediaDB) return Promise.resolve(_mediaDB);
+  return new Promise((resolve, reject)=>{
+    if(!window.indexedDB){ reject(new Error('IndexedDB not available')); return; }
+    const req = indexedDB.open(MEDIA_DB_NAME, 1);
+    req.onerror = ()=>reject(req.error || new Error('IDB open failed'));
+    req.onupgradeneeded = (e)=>{
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(MEDIA_STORE)){
+        db.createObjectStore(MEDIA_STORE, { keyPath:'key' });
+      }
+    };
+    req.onsuccess = ()=>{ _mediaDB = req.result; resolve(_mediaDB); };
+  });
+}
+
+async function putMedia(key, blob, meta){
+  const db = await openMediaDB();
+  return new Promise((resolve, reject)=>{
+    let aborted = false;
+    const tx = db.transaction(MEDIA_STORE, 'readwrite');
+    tx.objectStore(MEDIA_STORE).put({ key, blob, ...meta });
+    tx.oncomplete = ()=>resolve();
+    tx.onerror    = ()=>{ if(!aborted){ aborted=true; reject(tx.error || new Error('IDB write failed')); } };
+    tx.onabort    = ()=>{ if(!aborted){ aborted=true; reject(tx.error || new Error('IDB write aborted (likely out of space)')); } };
+  });
+}
+
+async function getMedia(key){
+  const db = await openMediaDB();
+  return new Promise((resolve, reject)=>{
+    const tx  = db.transaction(MEDIA_STORE, 'readonly');
+    const req = tx.objectStore(MEDIA_STORE).get(key);
+    req.onsuccess = ()=>resolve(req.result || null);
+    req.onerror   = ()=>reject(req.error);
+  });
+}
+
+async function deleteMedia(key){
+  try{
+    const db = await openMediaDB();
+    return new Promise((resolve)=>{
+      const tx = db.transaction(MEDIA_STORE, 'readwrite');
+      tx.objectStore(MEDIA_STORE).delete(key);
+      tx.oncomplete = ()=>resolve();
+      tx.onerror    = ()=>resolve(); // best-effort
+    });
+  }catch(e){ /* swallow */ }
+}
+
+/* Pretty-format byte counts */
+function fmtBytes(n){
+  if(!n) return '0 B';
+  if(n < 1024) return n + ' B';
+  if(n < 1024*1024) return (n/1024).toFixed(0) + ' KB';
+  if(n < 1024*1024*1024) return (n/(1024*1024)).toFixed(1) + ' MB';
+  return (n/(1024*1024*1024)).toFixed(2) + ' GB';
+}
+
+/* Convert current `rows` into a saveable JSON form. Uploaded blob URLs
+   are persisted to IndexedDB; the row stores only a `mediaKey` pointer.
+   On any IDB write failure, all keys written in this save are rolled
+   back so we never leave half-saved orphans. */
+async function serializeRows(){
+  const out = [];
+  const writtenKeys = [];      // for rollback
+  let mediaBytes = 0;
+  let mediaCount = 0;
+
+  try{
+    for(const r of rows){
+      const s = {
+        order: +r.order || 1,
+        type: r.type || 'play',
+        speaker: r.speaker || 'bot',
+        imageUrl: r.imageUrl || '',
+        audioUrl: r.audioUrl || '',
+        text: r.text || '',
+        systemPrompt: r.systemPrompt || ''
+      };
+
+      const isUploaded = r.mediaBlobUrl
+                      && r.imageUrl === r.mediaBlobUrl
+                      && (r.mediaBlobUrl.startsWith('blob:') || r.mediaBlobUrl.startsWith('data:'));
+
+      if(isUploaded){
+        // Pull the bytes out of the live blob URL
+        const blob = await fetch(r.mediaBlobUrl).then(x=>x.blob());
+        const key  = uid();
+        await putMedia(key, blob, {
+          userEmail: currentUser,
+          fileName: r.mediaFileName || '',
+          mediaType: r.mediaType || (blob.type.startsWith('video') ? 'video' : 'image'),
+          mimeType: blob.type,
+          size: blob.size,
+          createdAt: Date.now()
+        });
+        writtenKeys.push(key);
+        s.imageUrl       = '';     // uploaded asset lives in IDB now
+        s.mediaKey       = key;
+        s.mediaFileName  = r.mediaFileName || '';
+        s.mediaType      = r.mediaType || (blob.type.startsWith('video') ? 'video' : 'image');
+        s.mediaSize      = blob.size;
+        mediaBytes      += blob.size;
+        mediaCount      += 1;
+      }
+      out.push(s);
+    }
+  }catch(e){
+    // Rollback any keys we wrote during this attempt
+    for(const k of writtenKeys){ await deleteMedia(k); }
+    throw e;
+  }
+
+  return { rows: out, mediaBytes, mediaCount };
+}
+
+/* Reverse of serializeRows — turn stored data back into in-editor row
+   objects. Fetches uploaded media from IndexedDB and reconstructs blob
+   URLs so the original asset plays back in the preview. */
+async function restoreRows(savedRows){
+  const out = [];
+  let missingCount = 0;
+
+  for(const r of (savedRows||[])){
+    const row = {
+      id: uid(),
+      order: +r.order || 1,
+      type: r.type || 'play',
+      speaker: r.speaker || 'bot',
+      imageUrl: r.imageUrl || '',
+      audioUrl: r.audioUrl || '',
+      text: r.text || '',
+      systemPrompt: r.systemPrompt || '',
+      mediaBlobUrl: null,
+      mediaFileName: null,
+      mediaType: null
+    };
+
+    if(r.mediaKey){
+      try{
+        const entry = await getMedia(r.mediaKey);
+        if(entry && entry.blob){
+          const url = URL.createObjectURL(entry.blob);
+          row.imageUrl      = url;
+          row.mediaBlobUrl  = url;
+          row.mediaFileName = r.mediaFileName || entry.fileName || '';
+          row.mediaType     = r.mediaType    || entry.mediaType || (entry.blob.type.startsWith('video') ? 'video' : 'image');
+        } else {
+          missingCount++;
+          row.mediaFileName = (r.mediaFileName || 'media') + ' (missing)';
+        }
+      }catch(e){
+        missingCount++;
+        row.mediaFileName = (r.mediaFileName || 'media') + ' (error)';
+      }
+    }
+    out.push(row);
+  }
+  if(missingCount){
+    toast(`⚠ ${missingCount} media file${missingCount>1?'s':''} could not be loaded`,'err');
+  }
+  return out;
+}
+
+function hasUploadedMedia(){
+  return rows.some(r => r.mediaBlobUrl && (r.mediaBlobUrl.startsWith('blob:') || r.mediaBlobUrl.startsWith('data:')));
+}
+
+function openSavePrompt(){
+  if(!currentUser){ showLogin(); return; }
+  if(!rows.length){ toast('Add some rows first','err'); return; }
+  $('saveName').value = '';
+  // Auto-suggest a name from first text-bearing row
+  const first = rows.find(r=>r.text && r.text.trim());
+  if(first){ $('saveName').value = trm(first.text.trim(), 40); }
+  $('saveMediaWarn').style.display = hasUploadedMedia() ? 'block' : 'none';
+  $('savePrompt').classList.add('open');
+  setTimeout(()=>$('saveName').focus(), 100);
+}
+
+function closeSavePrompt(){ $('savePrompt').classList.remove('open'); }
+
+async function doSave(){
+  const name = $('saveName').value.trim();
+  if(!name){ toast('Give it a name','err'); return; }
+  if(!currentUser){ toast('Not logged in','err'); return; }
+
+  // If there's media, show a brief progress toast since IDB writes for big videos can take a moment
+  if(hasUploadedMedia()) toast('Saving — packing media…','');
+
+  let serialized, mediaBytes, mediaCount;
+  try{
+    ({ rows: serialized, mediaBytes, mediaCount } = await serializeRows());
+  }catch(e){
+    const msg = (e && e.message || '').toLowerCase().includes('space')
+      ? '⚠ Browser storage is full. Delete some saved scenarios and try again.'
+      : '⚠ Could not save media: ' + (e.message || e);
+    toast(msg,'err');
+    return;
+  }
+
+  const data = getUserData();
+  data.scenarios = data.scenarios || [];
+  data.scenarios.unshift({
+    id: uid(),
+    name,
+    savedAt: Date.now(),
+    rows: serialized,
+    mediaBytes,
+    mediaCount
+  });
+  const ok = saveUserData(data);
+  if(!ok){
+    // saveUserData failed (very rare — text data is small). Clean up IDB.
+    for(const r of serialized){ if(r.mediaKey) await deleteMedia(r.mediaKey); }
+    return;
+  }
+  closeSavePrompt();
+  let msg = `✓ Saved "${trm(name,30)}"`;
+  if(mediaCount) msg += ` · ${mediaCount} file${mediaCount>1?'s':''} (${fmtBytes(mediaBytes)})`;
+  toast(msg,'ok');
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SAVED SCENARIOS PANEL
+   ════════════════════════════════════════════════════════════════════ */
+
+function openSavedPanel(){
+  if(!currentUser){ showLogin(); return; }
+  renderSavedList();
+  $('savedPanel').classList.add('open');
+}
+function closeSavedPanel(){ $('savedPanel').classList.remove('open'); }
+
+function renderSavedList(){
+  const data = getUserData();
+  const list = data.scenarios || [];
+  $('savedCount').textContent = list.length + ' saved';
+  const box = $('savedList');
+  if(!list.length){
+    box.innerHTML = `<div class="saved-empty">
+      <div class="se-icon">📭</div>
+      <div>No saved scenarios yet.</div>
+      <div style="margin-top:6px;font-size:.65rem">Build a flow in the editor, then click 💾 Save.</div>
+    </div>`;
+    return;
+  }
+  box.innerHTML = '';
+  list.forEach(sc=>{
+    const item = document.createElement('div');
+    item.className = 'saved-item';
+    const when = new Date(sc.savedAt);
+    const whenStr = when.toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const rowsN = (sc.rows||[]).length;
+    let metaTail = '';
+    if(sc.mediaCount) metaTail = ` · ${sc.mediaCount} file${sc.mediaCount>1?'s':''} (${fmtBytes(sc.mediaBytes||0)})`;
+    item.innerHTML = `
+      <div class="saved-info">
+        <div class="saved-name" title="${escA(sc.name)}">${esc(sc.name)}</div>
+        <div class="saved-meta">${rowsN} rows${esc(metaTail)} · saved ${esc(whenStr)}</div>
+      </div>
+      <div class="saved-actions">
+        <button class="saved-btn"        data-act="load">↓ Load</button>
+        <button class="saved-btn video"  data-act="video" title="Record & download as .webm">🎥 Video</button>
+        <button class="saved-btn del"    data-act="del">✕</button>
+      </div>`;
+    item.querySelector('[data-act=load]').onclick  = ()=>loadScenario(sc.id);
+    item.querySelector('[data-act=video]').onclick = ()=>downloadScenario(sc.id);
+    item.querySelector('[data-act=del]').onclick   = ()=>deleteScenario(sc.id);
+    box.appendChild(item);
+  });
+}
+
+async function loadScenario(id){
+  if(rows.length && !confirm('Loading will replace the rows currently in the editor. Continue?')) return;
+  const data = getUserData();
+  const sc = (data.scenarios||[]).find(s=>s.id===id);
+  if(!sc){ toast('Scenario not found','err'); return; }
+  if(sc.mediaCount) toast('Loading — fetching media…','');
+  // Clean up old blob URLs
+  rows.forEach(r=>{ if(r.mediaBlobUrl && r.mediaBlobUrl.startsWith('blob:')) URL.revokeObjectURL(r.mediaBlobUrl); });
+  rows = await restoreRows(sc.rows);
+  renderTable();
+  closeSavedPanel();
+  toast(`↓ Loaded "${trm(sc.name,30)}"`,'ok');
+}
+
+async function deleteScenario(id){
+  const data = getUserData();
+  const sc = (data.scenarios||[]).find(s=>s.id===id);
+  if(!sc) return;
+  const mediaInfo = sc.mediaCount ? ` (and ${sc.mediaCount} media file${sc.mediaCount>1?'s':''}, ${fmtBytes(sc.mediaBytes||0)})` : '';
+  if(!confirm(`Delete "${sc.name}"${mediaInfo}? This cannot be undone.`)) return;
+  // Clean up IDB media for this scenario
+  for(const r of (sc.rows||[])){
+    if(r.mediaKey){ await deleteMedia(r.mediaKey); }
+  }
+  data.scenarios = data.scenarios.filter(s=>s.id!==id);
+  saveUserData(data);
+  renderSavedList();
+  toast('Deleted','ok');
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   DOWNLOAD AS VIDEO  (getDisplayMedia + MediaRecorder)
+   ════════════════════════════════════════════════════════════════════ */
+
+function downloadScenario(id){
+  pendingDownloadId = id;
+  $('dlPrompt').classList.add('open');
+}
+function closeDlPrompt(){
+  $('dlPrompt').classList.remove('open');
+  pendingDownloadId = null;
+}
+
+async function confirmDownload(){
+  const id = pendingDownloadId;
+  $('dlPrompt').classList.remove('open');
+  if(!id) return;
+
+  // Check browser support
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia){
+    toast('Your browser does not support screen recording','err');
+    return;
+  }
+  if(typeof MediaRecorder === 'undefined'){
+    toast('Your browser does not support MediaRecorder','err');
+    return;
+  }
+
+  const data = getUserData();
+  const sc = (data.scenarios||[]).find(s=>s.id===id);
+  if(!sc){ toast('Scenario not found','err'); return; }
+
+  // Load scenario into editor (so preview engine has the rows)
+  rows.forEach(r=>{ if(r.mediaBlobUrl && r.mediaBlobUrl.startsWith('blob:')) URL.revokeObjectURL(r.mediaBlobUrl); });
+  if(sc.mediaCount) toast('Loading media for recording…','');
+  rows = await restoreRows(sc.rows);
+  renderTable();
+  closeSavedPanel();
+
+  // Ask user to share the tab
+  let stream;
+  try{
+    stream = await navigator.mediaDevices.getDisplayMedia({
+      video: { displaySurface: 'browser' },
+      audio: true
+    });
+  }catch(e){
+    toast('Recording cancelled','err');
+    return;
+  }
+
+  const hasAudio = stream.getAudioTracks().length > 0;
+  if(!hasAudio){
+    toast('⚠ No audio captured — make sure "Share tab audio" is ON','err');
+  }
+
+  // Choose a supported mime
+  let mime = 'video/webm;codecs=vp9,opus';
+  if(!MediaRecorder.isTypeSupported(mime)) mime = 'video/webm;codecs=vp8,opus';
+  if(!MediaRecorder.isTypeSupported(mime)) mime = 'video/webm';
+
+  const chunks = [];
+  let recorder;
+  try{
+    recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 2_500_000 });
+  }catch(e){
+    toast('Could not start recorder: '+e.message,'err');
+    stream.getTracks().forEach(t=>t.stop());
+    return;
+  }
+  recorder.ondataavailable = e=>{ if(e.data && e.data.size>0) chunks.push(e.data); };
+
+  activeRecorder = recorder;
+  activeStream = stream;
+
+  // If the user clicks the browser's "Stop sharing" button mid-recording, bail out gracefully
+  stream.getVideoTracks()[0].addEventListener('ended', ()=>{
+    if(recorder.state !== 'inactive'){
+      try{ recorder.stop(); }catch(e){}
+    }
+    onPreviewEnd = null;
+    closePreview();
+  });
+
+  // Set up the "preview is done" promise BEFORE we start playing
+  let resolveDone;
+  const donePromise = new Promise(r=>{ resolveDone = r; });
+  onPreviewEnd = ()=>{
+    // small tail so the last word & a clean frame get captured
+    setTimeout(()=>resolveDone('done'), 900);
+  };
+  // Safety timeout — never hang forever (10 min cap)
+  const timeoutHandle = setTimeout(()=>{
+    if(resolveDone) resolveDone('timeout');
+  }, 10 * 60 * 1000);
+
+  // Show the recording indicator and start
+  $('recOverlay').classList.add('show');
+  recorder.start(250); // 250ms chunks
+
+  // Open preview — this triggers startPreview() which sets running=true and processes steps
+  openPreview();
+
+  // Wait for the preview to finish (or the stream to end)
+  await donePromise;
+  clearTimeout(timeoutHandle);
+
+  // Stop the recorder cleanly and wait for the final 'stop' event
+  if(recorder.state !== 'inactive'){
+    await new Promise(resolve=>{
+      recorder.addEventListener('stop', resolve, { once: true });
+      try{ recorder.stop(); }catch(e){ resolve(); }
+    });
+  }
+
+  // Stop all capture tracks
+  stream.getTracks().forEach(t=>t.stop());
+  activeRecorder = null;
+  activeStream = null;
+  $('recOverlay').classList.remove('show');
+  closePreview();
+  onPreviewEnd = null;
+
+  // Assemble and trigger download
+  if(!chunks.length){
+    toast('Nothing was recorded','err');
+    return;
+  }
+  const blob = new Blob(chunks, { type: 'video/webm' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const safeName = (sc.name||'scenario').replace(/[^a-z0-9_\-]+/gi,'_').slice(0,60);
+  const stamp    = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `${safeName}_${stamp}.webm`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 5000);
+  toast(`✓ Downloaded ${a.download}`,'ok');
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   INIT — gate everything on login
+   ════════════════════════════════════════════════════════════════════ */
+(function init(){
+  const saved = localStorage.getItem(LS_CURRENT);
+  if(saved){
+    currentUser = saved;
+    $('userEmail').textContent = saved;
+    $('userBadge').style.display = 'flex';
+    hideLogin();
+    resetSheet();
+  } else {
+    showLogin();
+  }
+})();
+</script>
+</body>
+</html>
